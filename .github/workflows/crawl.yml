@@ -12,8 +12,13 @@ permissions:
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 强制使用 Node 24
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4    # 更新到 v4
+      - uses: actions/checkout@v4
+      ...
 
       - name: 设置 Python
         uses: actions/setup-python@v5   # 更新到 v5
