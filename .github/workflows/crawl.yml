@@ -11,6 +11,8 @@ permissions:
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 消除警告
     steps:
       - uses: actions/checkout@v4
       - name: 设置 Python
