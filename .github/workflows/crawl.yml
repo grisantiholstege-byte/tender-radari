@@ -2,36 +2,26 @@ name: 自动抓取招标数据
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 每天北京时间 8 点
-  workflow_dispatch:       # 手动触发
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
-# 👇 关键：赋予写权限
 permissions:
   contents: write
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 强制使用 Node 24
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-      ...
-
       - name: 设置 Python
-        uses: actions/setup-python@v5   # 更新到 v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
       - name: 安装依赖
         run: pip install requests beautifulsoup4
-
       - name: 运行爬虫
         run: python crawler.py
-
-      - name: 提交并推送更新
+      - name: 提交更新
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
