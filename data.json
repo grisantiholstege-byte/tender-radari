@@ -1,14 +1,14 @@
 [
   {
-    "name": "暂无数据，请稍后刷新",
-    "company": "",
-    "type": "",
-    "pubDate": "",
-    "deadline": "",
-    "status": "",
-    "keyword": "",
-    "region": "",
-    "platform": "",
-    "refUrl": ""
+    "name": "测试项目-贵州茅台酒盒包装招标",
+    "company": "测试采购单位",
+    "type": "酒类包装",
+    "pubDate": "2026-04-01",
+    "deadline": "2027-05-15",
+    "status": "招标中",
+    "keyword": "酒盒",
+    "region": "仁怀",
+    "platform": "黔云招采",
+    "refUrl": "https://www.e-qyzc.com/"
   }
 ]
