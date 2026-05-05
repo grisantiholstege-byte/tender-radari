@@ -8,36 +8,36 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
         :root { --bg: #f0f4f9; --card: #fff; --text: #1a2c3e; --accent: #0b5e3c; --border: #e0e8da; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 12px 8px; }
-        .container { max-width: 1600px; margin: 0 auto; background: #fff; border-radius: 24px; box-shadow: 0 8px 28px -10px rgba(0,0,0,0.06); overflow: hidden; }
-        .hero { background: linear-gradient(135deg, #0a3e2f, #1a6b4a); padding: 22px 24px; color: #fff; }
-        .hero h1 { font-size: 24px; font-weight: 700; }
-        .hero-sub { opacity: 0.9; font-size: 13px; margin-top: 6px; }
-        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-        .tags span { background: rgba(255,255,255,0.15); border-radius: 50px; padding: 4px 11px; font-size: 11px; }
-        .stats { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px; background: #fafdf8; border-bottom: 1px solid var(--border); font-size: 12px; color: #4a6e52; }
-        .stat { background: #fff; border-radius: 30px; padding: 6px 14px; border: 1px solid #dce8d3; font-weight: 500; }
-        .stat strong { color: var(--accent); font-size: 15px; }
-        .toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 12px 20px; background: #fefef8; border-bottom: 1px solid var(--border); }
-        .fgroup { display: flex; gap: 8px; flex-wrap: wrap; }
-        select, input { padding: 7px 12px; border-radius: 30px; border: 1px solid #cfdec5; background: #fff; font-size: 12px; }
-        input[type=text] { width: 200px; }
-        .btn { background: var(--accent); border: none; color: #fff; padding: 8px 16px; border-radius: 30px; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        .psec { padding: 10px 20px; font-weight: 600; color: #2a5e3e; border-bottom: 1px solid var(--border); }
-        .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 8px; padding: 10px 20px; background: #fefef8; }
-        .pcard { background: #fff; border-radius: 16px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1e4f3a; border: 1px solid #e0e8da; }
-        .pcard:hover { background: #eef6e8; }
-        .twrap { overflow-x: auto; padding: 8px 20px 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
-        th { background: #f1f5ea; padding: 10px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #cfdec5; }
-        td { padding: 8px 8px; border-bottom: 1px solid #eef2e4; }
-        .tag { display: inline-block; border-radius: 20px; padding: 3px 9px; font-size: 10px; font-weight: 600; background: #eef2e4; color: #2a5e3e; }
-        .s-open { background: #e0f7e8; color: #1f7840; }
-        .s-closed { background: #ffe6e2; color: #b33c1c; }
-        .sbtn { background: #eef2ff; border: none; padding: 4px 8px; border-radius: 20px; font-size: 10px; cursor: pointer; color: #295c8a; margin-right: 4px; }
-        .footer { padding: 10px 20px; text-align: center; font-size: 10px; border-top: 1px solid var(--border); color: #5a6e4d; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1a2e22; color: #fff; padding: 8px 18px; border-radius: 30px; font-size: 11px; z-index: 999; opacity: 0; transition: opacity 0.2s; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); padding:12px 8px; }
+        .container { max-width:1600px; margin:0 auto; background:#fff; border-radius:24px; box-shadow:0 8px 28px -10px rgba(0,0,0,0.06); overflow:hidden; }
+        .hero { background:linear-gradient(135deg,#0a3e2f,#1a6b4a); padding:22px 24px; color:#fff; }
+        .hero h1 { font-size:24px; font-weight:700; }
+        .hero-sub { opacity:0.9; font-size:13px; margin-top:6px; }
+        .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+        .tags span { background:rgba(255,255,255,0.15); border-radius:50px; padding:4px 11px; font-size:11px; }
+        .stats { display:flex; flex-wrap:wrap; gap:8px; padding:12px 20px; background:#fafdf8; border-bottom:1px solid var(--border); font-size:12px; color:#4a6e52; }
+        .stat { background:#fff; border-radius:30px; padding:6px 14px; border:1px solid #dce8d3; font-weight:500; }
+        .stat strong { color:var(--accent); font-size:15px; }
+        .toolbar { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:12px 20px; background:#fefef8; border-bottom:1px solid var(--border); }
+        .fgroup { display:flex; gap:8px; flex-wrap:wrap; }
+        select, input { padding:7px 12px; border-radius:30px; border:1px solid #cfdec5; background:#fff; font-size:12px; }
+        input[type=text] { width:200px; }
+        .btn { background:var(--accent); border:none; color:#fff; padding:8px 16px; border-radius:30px; font-weight:600; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+        .psec { padding:10px 20px; font-weight:600; color:#2a5e3e; border-bottom:1px solid var(--border); }
+        .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; padding:10px 20px; background:#fefef8; }
+        .pcard { background:#fff; border-radius:16px; padding:8px 12px; display:flex; align-items:center; gap:10px; text-decoration:none; color:#1e4f3a; border:1px solid #e0e8da; }
+        .pcard:hover { background:#eef6e8; }
+        .twrap { overflow-x:auto; padding:8px 20px 20px; }
+        table { width:100%; border-collapse:collapse; font-size:12px; min-width:1000px; }
+        th { background:#f1f5ea; padding:10px 8px; text-align:left; font-weight:600; border-bottom:2px solid #cfdec5; }
+        td { padding:8px 8px; border-bottom:1px solid #eef2e4; }
+        .tag { display:inline-block; border-radius:20px; padding:3px 9px; font-size:10px; font-weight:600; background:#eef2e4; color:#2a5e3e; }
+        .s-open { background:#e0f7e8; color:#1f7840; }
+        .s-closed { background:#ffe6e2; color:#b33c1c; }
+        .sbtn { background:#eef2ff; border:none; padding:4px 8px; border-radius:20px; font-size:10px; cursor:pointer; color:#295c8a; margin-right:4px; }
+        .footer { padding:10px 20px; text-align:center; font-size:10px; border-top:1px solid var(--border); color:#5a6e4d; }
+        .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1a2e22; color:#fff; padding:8px 18px; border-radius:30px; font-size:11px; z-index:999; opacity:0; transition:opacity 0.2s; }
     </style>
 </head>
 <body>
@@ -89,22 +89,22 @@
             <tbody id="tableBody"><tr><td colspan="8" style="text-align:center;padding:30px;">正在加载数据…</td></tr></tbody>
         </table>
     </div>
-    <div class="footer">📌 数据来源：内置备用数据 / data.json（优先） | ⚠️ 以官方公告为准</div>
+    <div class="footer">📌 数据来源：内置备份数据 + data.json（优先） | ⚠️ 以官方公告为准</div>
 </div>
 <div id="toastMsg" class="toast"></div>
 
 <script>
 (function() {
-    // 内置后备数据（绝不空白）
+    // ===== 内置备份数据，确保页面永不为空 =====
     const BUILTIN_DATA = [
-        { name:"仁怀酱酒集团酒盒供应商入围", company:"仁怀酱酒集团", type:"酒类包装", pubDate:"2026-04-30", deadline:"2026-05-06", status:"入围公示", keyword:"酒盒 礼盒 手提袋", region:"仁怀", platform:"黔云招采", refUrl:"http://www.mchcjt.com/" },
-        { name:"茅台保健酒业2026年包装物资采购", company:"茅台保健酒业有限公司", type:"包装印刷", pubDate:"2026-04-28", deadline:"2026-05-15", status:"招标中", keyword:"包装物资 纸箱", region:"仁怀", platform:"保健酒业官网", refUrl:"https://bjj.moutai.com.cn/" },
-        { name:"茅台文旅文创产品供应商公开招募", company:"茅台文旅有限责任公司", type:"供应商招募", pubDate:"2026-04-10", deadline:"2026-06-30", status:"招募中", keyword:"酒盒 礼盒 文创", region:"仁怀", platform:"茅台文旅", refUrl:"https://www.mtwhly.com/" },
-        { name:"贵州出版集团2026年教材印刷服务", company:"贵州出版集团有限公司", type:"出版物印刷", pubDate:"2026-04-20", deadline:"2026-05-15", status:"招标中", keyword:"教材印刷", region:"贵阳", platform:"贵州省公共资源交易中心", refUrl:"https://ggzy.guizhou.gov.cn/" },
-        { name:"贵阳南明老干妈纸箱包装采购", company:"贵阳南明老干妈食品公司", type:"食品包装", pubDate:"2026-04-28", deadline:"2026-05-20", status:"招标中", keyword:"纸箱 食品包装", region:"贵阳", platform:"贵州招标网", refUrl:"https://guizhou.zhaobiao.cn/" }
+        { name:"仁怀酱酒集团酒盒供应商入围", company:"仁怀酱酒集团", type:"酒类包装", pubDate:"2026-04-30", deadline:"2026-05-06", status:"入围公示", keyword:"酒盒 礼盒", region:"仁怀", platform:"黔云招采", refUrl:"http://www.mchcjt.com/" },
+        { name:"茅台保健酒业包材采购", company:"茅台保健酒业", type:"包装印刷", pubDate:"2026-04-28", deadline:"2026-05-15", status:"招标中", keyword:"包装物资", region:"仁怀", platform:"保健酒业官网", refUrl:"https://bjj.moutai.com.cn/" },
+        { name:"茅台文旅供应商招募", company:"茅台文旅", type:"供应商招募", pubDate:"2026-04-10", deadline:"2026-06-30", status:"招募中", keyword:"酒盒 文创", region:"仁怀", platform:"茅台文旅", refUrl:"https://www.mtwhly.com/" },
+        { name:"贵州出版集团教材印刷", company:"贵州出版集团", type:"出版物印刷", pubDate:"2026-04-20", deadline:"2026-05-15", status:"招标中", keyword:"教材印刷", region:"贵阳", platform:"贵州省公共资源交易中心", refUrl:"https://ggzy.guizhou.gov.cn/" },
+        { name:"老干妈纸箱包装采购", company:"贵阳南明老干妈", type:"食品包装", pubDate:"2026-04-28", deadline:"2026-05-20", status:"招标中", keyword:"纸箱", region:"贵阳", platform:"贵州招标网", refUrl:"https://guizhou.zhaobiao.cn/" }
     ];
 
-    let allData = BUILTIN_DATA;  // 默认直接用内置数据，不再等待
+    let allData = [...BUILTIN_DATA];   // 默认就用内置数据
     let currentData = [];
     let filterType = 'all', filterRegion = 'all', filterKeyword = '';
 
@@ -112,17 +112,16 @@
     const toast = document.getElementById('toastMsg');
 
     function showToast(msg) {
-        toast.textContent = msg;
-        toast.style.opacity = '1';
+        toast.textContent = msg; toast.style.opacity = '1';
         setTimeout(() => toast.style.opacity = '0', 2200);
     }
 
-    // 尝试从 data.json 加载，成功则替换内置数据
-    async function tryLoadExternalData() {
+    // 尝试加载 data.json，如果成功且非空就替换内置数据
+    async function loadExternalData() {
         try {
-            const response = await fetch('data.json');
-            if (!response.ok) throw new Error('无 data.json');
-            const json = await response.json();
+            const res = await fetch('data.json');
+            if (!res.ok) throw new Error('无 data.json');
+            const json = await res.json();
             if (Array.isArray(json) && json.length > 0) {
                 allData = json;
                 showToast(`✅ 已加载外部数据 ${json.length} 条`);
@@ -154,7 +153,7 @@
         }
         if (filterKeyword.trim()) {
             const kw = filterKeyword.trim().toLowerCase();
-            filtered = filtered.filter(i => (i.name||'').toLowerCase().includes(kw) || (i.company||'').toLowerCase().includes(kw));
+            filtered = filtered.filter(i => (i.name||'').includes(kw) || (i.company||'').includes(kw));
         }
         currentData = filtered;
         renderTable();
@@ -185,8 +184,8 @@
         tableBody.innerHTML = html;
     }
 
-    // 事件绑定
-    tableBody.addEventListener('click', (e) => {
+    // 事件委托
+    tableBody.addEventListener('click', e => {
         const btn = e.target.closest('button');
         if (!btn) return;
         if (btn.dataset.url) {
@@ -209,10 +208,7 @@
         document.getElementById('searchInput').value = '';
         applyFilter();
     });
-    document.getElementById('refreshBtn').addEventListener('click', async () => {
-        showToast('正在刷新数据...');
-        await tryLoadExternalData();
-    });
+    document.getElementById('refreshBtn').addEventListener('click', loadExternalData);
     document.getElementById('exportBtn').addEventListener('click', () => {
         if (!currentData.length) return;
         const wsdata = [["序号","项目名称","采购单位","类型","发布日期","截止日期","状态","地区"]];
@@ -240,10 +236,10 @@
     document.getElementById('natPlatforms').innerHTML = natPlats.map(p => 
         `<a href="${p.url}" target="_blank" class="pcard"><i class="fas ${p.icon}"></i><div><strong>${p.name}</strong></div></a>`).join('');
 
-    // 立即显示内置数据，同时尝试加载外部JSON
+    // 直接显示内置数据，同时异步尝试加载外部 JSON
     updateStats();
     applyFilter();
-    tryLoadExternalData();  // 静默加载，成功则替换
+    loadExternalData();
 })();
 </script>
 </body>
