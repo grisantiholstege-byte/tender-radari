@@ -1,14 +1,62 @@
 [
   {
-    "name": "测试项目-贵州茅台酒盒包装招标",
-    "company": "测试采购单位",
+    "name": "仁怀酱酒集团酒盒供应商入围",
+    "company": "仁怀酱酒集团",
     "type": "酒类包装",
-    "pubDate": "2026-04-01",
-    "deadline": "2027-05-15",
-    "status": "招标中",
-    "keyword": "酒盒",
+    "pubDate": "2026-04-30",
+    "deadline": "2026-05-06",
+    "status": "入围公示",
+    "keyword": "酒盒 礼盒 手提袋",
     "region": "仁怀",
     "platform": "黔云招采",
-    "refUrl": "https://www.e-qyzc.com/"
+    "refUrl": "http://www.mchcjt.com/"
+  },
+  {
+    "name": "茅台保健酒业2026年包装物资采购",
+    "company": "茅台保健酒业有限公司",
+    "type": "包装印刷",
+    "pubDate": "2026-04-28",
+    "deadline": "2026-05-15",
+    "status": "招标中",
+    "keyword": "包装物资 纸箱",
+    "region": "仁怀",
+    "platform": "保健酒业官网",
+    "refUrl": "https://bjj.moutai.com.cn/"
+  },
+  {
+    "name": "茅台文旅文创产品供应商公开招募",
+    "company": "茅台文旅有限责任公司",
+    "type": "供应商招募",
+    "pubDate": "2026-04-10",
+    "deadline": "2026-06-30",
+    "status": "招募中",
+    "keyword": "酒盒 礼盒 文创",
+    "region": "仁怀",
+    "platform": "茅台文旅",
+    "refUrl": "https://www.mtwhly.com/"
+  },
+  {
+    "name": "贵州出版集团2026年教材印刷服务",
+    "company": "贵州出版集团有限公司",
+    "type": "出版物印刷",
+    "pubDate": "2026-04-20",
+    "deadline": "2026-05-15",
+    "status": "招标中",
+    "keyword": "教材印刷",
+    "region": "贵阳",
+    "platform": "贵州省公共资源交易中心",
+    "refUrl": "https://ggzy.guizhou.gov.cn/"
+  },
+  {
+    "name": "贵阳南明老干妈纸箱包装采购",
+    "company": "贵阳南明老干妈食品公司",
+    "type": "食品包装",
+    "pubDate": "2026-04-28",
+    "deadline": "2026-05-20",
+    "status": "招标中",
+    "keyword": "纸箱 食品包装",
+    "region": "贵阳",
+    "platform": "贵州招标网",
+    "refUrl": "https://guizhou.zhaobiao.cn/"
   }
 ]
