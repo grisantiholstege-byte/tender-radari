@@ -1,56 +1,67 @@
 import requests
-from bs4 import BeautifulSoup
 import json
 import re
 from datetime import datetime
 
-headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Requested-With": "XMLHttpRequest"
+}
 
-# 目标关键词
 keywords = ['包装', '印刷', '酒盒', '礼盒', '手提袋', '出版物', '商务印刷', '纸箱', '标签', '瓶盖', '彩盒']
 
-def fetch_guizhou_public():
-    """贵州招标投标公共服务平台"""
+def fetch_guizhou_api(page=1, page_size=20):
+    """直接调取贵州省招标投标公共服务平台的分页接口"""
+    url = "http://ztb.guizhou.gov.cn/api/bulletin/list"
+    params = {
+        "pageNo": page,
+        "pageSize": page_size,
+        "bulletinType": "1",       # 招标公告
+        "keyword": ""              # 可以尝试填入关键词，但为空时我们自行筛选
+    }
     items = []
     try:
-        url = "http://ztb.guizhou.gov.cn/trade/bulletin/?pageNo=1&pageSize=20"
-        r = requests.get(url, headers=headers, timeout=15)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        for li in soup.select('ul.news-list li'):
-            title_el = li.select_one('a.title')
-            if not title_el:
-                continue
-            title = title_el.get_text(strip=True)
+        r = requests.get(url, params=params, headers=headers, timeout=15)
+        if r.status_code != 200:
+            print(f"请求失败，状态码：{r.status_code}")
+            return items
+        data = r.json()
+        records = data.get("data", {}).get("rows", [])
+        for row in records:
+            title = row.get("title", "")
+            # 检查标题是否包含关键词
             if not any(kw in title for kw in keywords):
                 continue
-            date_el = li.select_one('span.date')
-            pub_date = date_el.get_text(strip=True) if date_el else ''
-            href = title_el.get('href', '')
-            if href and not href.startswith('http'):
-                href = 'http://ztb.guizhou.gov.cn' + href
+            pub_date = row.get("publishDate", "")
+            deadline = row.get("bidDeadline", "详见公告")
+            href = row.get("url", "")
+            if href and not href.startswith("http"):
+                href = "http://ztb.guizhou.gov.cn" + href
             items.append({
                 "name": title,
-                "company": "（详见公告）",
+                "company": row.get("tendererName", "（详见公告）"),
                 "type": guess_type(title),
-                "pubDate": pub_date,
-                "deadline": "详见公告",
-                "status": "招标中",
+                "pubDate": pub_date[:10] if pub_date else "",
+                "deadline": deadline[:10] if deadline else "详见公告",
+                "status": "招标中" if "结束" not in row.get("status", "") else "已结束",
                 "keyword": "",
                 "region": "贵州",
                 "platform": "贵州招标投标公共服务平台",
                 "refUrl": href
             })
-        print(f"贵州平台抓取到 {len(items)} 条")
+        print(f"贵州平台API抓取到 {len(items)} 条")
     except Exception as e:
-        print("贵州平台抓取出错：", e)
+        print("贵州平台API抓取出错：", e)
     return items
 
 def fetch_qianyun():
-    """黔云招采"""
+    """黔云招采（简单解析，若有变化可类似改用接口）"""
     items = []
     try:
         url = "https://www.e-qyzc.com/trade/bulletin/?pageNo=1&pageSize=20"
         r = requests.get(url, headers=headers, timeout=15)
+        from bs4 import BeautifulSoup
         soup = BeautifulSoup(r.text, 'html.parser')
         for li in soup.select('ul.news-list li'):
             title_el = li.select_one('a.title')
@@ -81,44 +92,7 @@ def fetch_qianyun():
         print("黔云招采抓取出错：", e)
     return items
 
-def fetch_moutai_wenlv():
-    """茅台文旅官网（供应商招募公告）"""
-    items = []
-    try:
-        url = "https://www.mtwhly.com/mtwhly/xwzx54/gggs86/index.html"
-        r = requests.get(url, headers=headers, timeout=15)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        for li in soup.select('ul.news-list li'):
-            title_el = li.select_one('a.title')
-            if not title_el:
-                continue
-            title = title_el.get_text(strip=True)
-            if not any(kw in title for kw in ['供应商', '招募', '入库', '包装', '礼盒', '酒盒', '印刷', '手提袋']):
-                continue
-            date_el = li.select_one('span.date')
-            pub_date = date_el.get_text(strip=True) if date_el else ''
-            href = title_el.get('href', '')
-            if href and not href.startswith('http'):
-                href = 'https://www.mtwhly.com' + href
-            items.append({
-                "name": title,
-                "company": "茅台文旅",
-                "type": "供应商招募",
-                "pubDate": pub_date,
-                "deadline": "详见公告",
-                "status": "招募中",
-                "keyword": "",
-                "region": "仁怀",
-                "platform": "茅台文旅",
-                "refUrl": href
-            })
-        print(f"茅台文旅抓取到 {len(items)} 条")
-    except Exception as e:
-        print("茅台文旅抓取出错：", e)
-    return items
-
 def guess_type(title):
-    """根据标题自动分类"""
     if any(k in title for k in ['酒盒','礼盒','手提袋','瓶盖','酒瓶']):
         return "酒类包装"
     elif any(k in title for k in ['出版物','图书','教材','报纸']):
@@ -132,15 +106,15 @@ def guess_type(title):
 
 def main():
     all_data = []
-    all_data.extend(fetch_guizhou_public())
+    all_data.extend(fetch_guizhou_api(1, 20))   # 第1页
+    all_data.extend(fetch_guizhou_api(2, 20))   # 第2页（可选）
     all_data.extend(fetch_qianyun())
-    all_data.extend(fetch_moutai_wenlv())
 
     if not all_data:
-        print("本次未抓取到任何项目，data.json 保持不变")
+        print("本次未抓取到任何项目，data.json保持不变")
         return
 
-    # 去重（相同链接只保留一个）
+    # 去重
     seen = set()
     unique = []
     for item in all_data:
