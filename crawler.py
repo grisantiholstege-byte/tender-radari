@@ -1,37 +1,50 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import re
+import time
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 }
 
-keywords = ['包装', '印刷', '酒盒', '礼盒', '手提袋', '出版物', '商务印刷', '纸箱', '标签', '瓶盖', '彩盒']
+# 贵州相关搜索关键词组合
+search_pairs = [
+    ("贵州", "包装"),
+    ("贵州", "印刷"),
+    ("贵州", "酒盒"),
+    ("贵州", "礼盒"),
+    ("贵州", "手提袋"),
+    ("贵州", "出版物"),
+    ("贵州", "商务印刷"),
+    ("仁怀", "酒盒"),
+    ("仁怀", "包装"),
+    ("遵义", "包装"),
+    ("贵阳", "印刷"),
+    ("茅台", "包材"),
+]
 
 def fetch_bidnews():
-    """从 bidnews.cn 搜索‘贵州 包装 印刷’等关键词，提取公告"""
+    """从 bidnews.cn 搜索并解析"""
     items = []
-    search_terms = ["贵州 包装", "贵州 印刷", "贵州 酒盒", "贵州 礼盒", "贵州 手提袋", "贵州 出版物", "贵州 商务印刷"]
-    for term in search_terms:
+    for area, kw in search_pairs:
         try:
-            url = f"https://www.bidnews.cn/search?keyword={term}"
+            url = f"https://www.bidnews.cn/search?keyword={area}%20{kw}"
             r = requests.get(url, headers=headers, timeout=20)
             soup = BeautifulSoup(r.text, 'html.parser')
-            # 根据 bidnews 搜索结果页结构解析（以实际为准，可能需要微调）
-            for item in soup.select('div.search-result-item'):
-                title_el = item.select_one('a.title')
+            # bidnews 的搜索结果条目通常为 div.media 或 li，这里尝试通用选择器
+            for block in soup.select('div.media, li.news-item'):
+                title_el = block.select_one('a[href*="bidnews"]')
                 if not title_el:
                     continue
                 title = title_el.get_text(strip=True)
                 # 二次过滤关键词
-                if not any(kw in title for kw in keywords):
+                if not any(k in title for k in ['包装','印刷','酒盒','礼盒','手提袋','出版物','商务印刷','纸箱','瓶盖']):
                     continue
                 href = title_el.get('href', '')
                 if href and not href.startswith('http'):
                     href = 'https://www.bidnews.cn' + href
-                date_el = item.select_one('span.date')
-                pub_date = date_el.get_text(strip=True) if date_el else ''
+                date_span = block.select_one('span.date, small.time')
+                pub_date = date_span.get_text(strip=True) if date_span else ''
                 items.append({
                     "name": title,
                     "company": "（详见公告）",
@@ -39,14 +52,53 @@ def fetch_bidnews():
                     "pubDate": pub_date,
                     "deadline": "详见公告",
                     "status": "招标中",
-                    "keyword": "",
-                    "region": "贵州",
+                    "keyword": f"{area} {kw}",
+                    "region": area if area in ['贵州','贵阳','遵义','仁怀','毕节'] else "贵州",
                     "platform": "bidnews.cn",
                     "refUrl": href
                 })
-            print(f"搜索词‘{term}’抓取到 {len(items)} 条（累计）")
+            print(f"bidnews 搜索 '{area} {kw}' 抓到 {len(items)} 条（累计）")
+            time.sleep(2)   # 礼貌爬取
         except Exception as e:
-            print(f"搜索词‘{term}’出错：{e}")
+            print(f"bidnews 搜索 '{area} {kw}' 出错：{e}")
+    return items
+
+def fetch_qianlima():
+    """从千里马招标网搜索"""
+    items = []
+    for area, kw in search_pairs[:6]:   # 减少请求量，只取前几个组合
+        try:
+            url = f"https://www.qianlima.com/search?key={area}%20{kw}"
+            r = requests.get(url, headers=headers, timeout=20)
+            soup = BeautifulSoup(r.text, 'html.parser')
+            for item in soup.select('div.list_item, li.search_result_item'):
+                title_el = item.select_one('a[href*="detail"]')
+                if not title_el:
+                    continue
+                title = title_el.get_text(strip=True)
+                if not any(k in title for k in ['包装','印刷','酒盒','礼盒','手提袋','出版物','商务印刷']):
+                    continue
+                href = title_el.get('href', '')
+                if href and not href.startswith('http'):
+                    href = 'https://www.qianlima.com' + href
+                date_span = item.select_one('span.date, time')
+                pub_date = date_span.get_text(strip=True) if date_span else ''
+                items.append({
+                    "name": title,
+                    "company": "（详见公告）",
+                    "type": guess_type(title),
+                    "pubDate": pub_date,
+                    "deadline": "详见公告",
+                    "status": "招标中",
+                    "keyword": f"{area} {kw}",
+                    "region": area if area in ['贵州','贵阳','遵义','仁怀'] else "贵州",
+                    "platform": "千里马招标网",
+                    "refUrl": href
+                })
+            print(f"千里马搜索 '{area} {kw}' 抓到 {len(items)} 条（累计）")
+            time.sleep(2)
+        except Exception as e:
+            print(f"千里马搜索 '{area} {kw}' 出错：{e}")
     return items
 
 def guess_type(title):
@@ -62,18 +114,22 @@ def guess_type(title):
         return "包装印刷"
 
 def main():
-    all_data = fetch_bidnews()
+    all_data = []
+    all_data.extend(fetch_bidnews())
+    all_data.extend(fetch_qianlima())
+
     if not all_data:
-        print("本次未抓取到任何项目，data.json 保持不变")
+        print("⚠️ 本次未抓取到任何项目，data.json 保持不变")
         return
 
     # 去重
     seen = set()
     unique = []
     for item in all_data:
-        if item['refUrl'] in seen:
+        key = item['refUrl']
+        if key in seen:
             continue
-        seen.add(item['refUrl'])
+        seen.add(key)
         unique.append(item)
 
     with open('data.json', 'w', encoding='utf-8') as f:
